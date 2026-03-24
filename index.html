@@ -38,7 +38,7 @@ const C = {
   sans:"'DM Sans','Inter','Segoe UI',system-ui,sans-serif",
 };
 
-const TP = "08";
+const TP = "09";
 
 function F({ children, d = 0 }) {
   const r = useRef(null); const [v, sv] = useState(false);
@@ -103,7 +103,7 @@ function Logo({ name, w=100, h=32, light=false }) {
 
 function App() {
   const [sec, setSec] = useState(0);
-  const ids = ["s1","s2","s3","s4","s5","s6","s7","s8"];
+  const ids = ["s1","s2","s3","s4","s5","s6","s7","s8","s9"];
 
   useEffect(() => {
     const h = () => { const y = window.scrollY + window.innerHeight*.45; ids.forEach((id,i) => { const el = document.getElementById(id); el && y>=el.offsetTop && y<el.offsetTop+el.offsetHeight && setSec(i); }); };
@@ -587,6 +587,62 @@ function App() {
           </div>
         </F>
         <PF title="Propuesta de Colaboración — Pampa Energía" num="08"/>
+      </Page>
+
+{/* ═══ 09 — PREGUNTAS FRECUENTES ═══ */}
+      <Page id="s9">
+        <SH num="09" title="Preguntas Frecuentes" sub="Respuestas anticipadas a las consultas técnicas y operativas más relevantes"/>
+
+        {[
+          {
+            q: "¿Cómo tienen que venir los datos?",
+            a: "Series temporales en formato tabular (CSV, Parquet o exportación directa del historian SCADA). Cada fila = timestamp + lecturas de sensores. No necesitan estar limpios — nuestro pipeline maneja NaN, congelamiento de señales y gaps temporales de forma nativa. Mínimo requerido: timestamp + presión + temperatura + caudal.",
+            color: C.blue
+          },
+          {
+            q: "¿Qué tanta información de la operación necesitan?",
+            a: "Para la primera corrida: datos SCADA crudos + listado de qué mide cada tag. El sistema aprende el comportamiento normal directamente de los datos. Info adicional (tipo de válvulas, árbol de pozo) mejora la clasificación de régimen pero no es excluyente. Además, complementamos con investigación propia en papers técnicos sobre los tipos de fallas específicos.",
+            color: C.green
+          },
+          {
+            q: "¿Cómo se relaciona el caso de Petrobras con la operación de Pampa?",
+            a: "Las variables físicas (presión, temperatura, caudal) y los tipos de fallas (hidratos, incrustaciones, slugging, DHSV) son universales en O&G. El caso de Petrobras valida la metodología — no se transfiere el modelo. El sistema se reentrena completamente con datos de cada operador. El piloto generaría un modelo específico para los activos de Pampa.",
+            color: C.amber
+          },
+          {
+            q: "¿Cómo calcularon los $8M y las 146t de CH₄? ¿Cuánto representa de la operación total?",
+            a: "$8M: distribución de fallas observada × tasas de pérdida de producción publicadas × $75/bbl con supuesto de intervención en 24hrs. 146t CH₄: eventos que requieren blowdown (hidratos + DHSV) con liberación de gas. Son una ilustración de orden de magnitud para un cluster offshore. El piloto cuantificaría el impacto real para la escala específica de Pampa.",
+            color: C.green
+          },
+          {
+            q: "¿Qué tan grande es la operación analizada?",
+            a: "32.8M de observaciones a intervalos de 1 minuto, 24 canales de sensores, 1,119 instancias reales etiquetadas, 9 tipos de fallas confirmadas. Es una de las bases de datos públicas más completas y citadas (100+ publicaciones académicas) para detección de anomalías en producción de petróleo y gas.",
+            color: C.blue
+          },
+          {
+            q: "¿Qué tanto necesitan saber de la operación de Pampa para correr los algoritmos?",
+            a: "Muy poco al inicio. La Capa 1 (detección) es no supervisada — aprende qué es 'normal' directamente de los datos. Lo primero que hacemos es un pre-análisis automático que identifica qué sensores reaccionan ante cada tipo de anomalía. Lo que sí necesitamos es que un experto valide los hallazgos: cuando el sistema detecta algo, el SME confirma si es real. Esa retroalimentación mejora la clasificación progresivamente.",
+            color: C.amber
+          },
+          {
+            q: "¿Cómo y quién clasificó los tipos de fallas?",
+            a: "Clasificadas por ingenieros de operaciones y expertos en integridad de pozos de Petrobras, basándose en reportes de incidentes confirmados. Taxonomía documentada en publicaciones peer-reviewed (Journal of Petroleum Science and Engineering, 2019). Para Pampa, la clasificación se construiría en conjunto con su equipo técnico a partir de sus propios registros.",
+            color: C.green
+          },
+        ].map((item, i) =>
+          <F key={i} d={i * 50}>
+            <div style={{ marginBottom: 16, background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8, padding: "20px 24px" }}>
+              <div style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
+                <div style={{ width: 28, height: 28, borderRadius: 6, background: item.color + "12", border: `1px solid ${item.color}28`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 800, fontFamily: C.mono, color: item.color, flexShrink: 0, marginTop: 2 }}>{"0" + (i + 1)}</div>
+                <div style={{ flex: 1 }}>
+                  <h4 style={{ fontSize: 14, fontWeight: 700, color: C.white, margin: "0 0 8px", lineHeight: 1.4 }}>{item.q}</h4>
+                  <p style={{ fontSize: 12, color: C.text, margin: 0, lineHeight: 1.7 }}>{item.a}</p>
+                </div>
+              </div>
+            </div>
+          </F>
+        )}
+        <PF title="Preguntas Frecuentes" num="09"/>
       </Page>
 
 {/* ═══ FOOTER ═══ */}
