@@ -92,8 +92,13 @@ function Page({ children, id }) {
   </section>;
 }
 
-function Logo({ name, w=100, h=32 }) {
-  return <div style={{ width:w, height:h, borderRadius:4, border:`1px solid ${C.border2}`, background:C.surface, display:"flex", alignItems:"center", justifyContent:"center", fontSize:9, fontWeight:700, fontFamily:C.mono, color:C.faint, letterSpacing:".1em", textTransform:"uppercase" }}>{name}</div>;
+function Logo({ name, w=100, h=32, light=false }) {
+  const [status, setStatus] = useState("loading");
+  const fallback = name.replace(/[-_]/g," ").replace(/\.\w+$/,"");
+  return <div style={{ width:w, height:h, borderRadius:4, overflow:"hidden", position:"relative", display:"flex", alignItems:"center", justifyContent:"center", background: light ? "rgba(255,255,255,0.9)" : "transparent", padding: light ? "3px 6px" : 0 }}>
+    {status !== "error" && <img src={"./" + name} alt={fallback} onLoad={() => setStatus("ok")} onError={() => setStatus("error")} style={{ maxWidth:"100%", maxHeight:"100%", objectFit:"contain", display:"block", opacity: status==="ok" ? 1 : 0, transition:"opacity .3s" }}/>}
+    {status === "error" && <span style={{ fontSize:9, fontWeight:700, fontFamily:C.mono, color:C.faint, letterSpacing:".08em", textTransform:"uppercase" }}>{fallback}</span>}
+  </div>;
 }
 
 function App() {
@@ -116,13 +121,13 @@ function App() {
       <header style={{ position:"sticky", top:0, zIndex:50, borderBottom:`1px solid ${C.border}`, background:C.bg+"e6", backdropFilter:"blur(14px)" }}>
         <div style={{ maxWidth:880, margin:"0 auto", padding:"12px 24px", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
           <div style={{ display:"flex", alignItems:"center", gap:12 }}>
-            <Logo name="vorntec.png" w={90} h={28}/>
+            <Logo name="vorntec-logo.png" w={90} h={28}/>
             <span style={{ width:1, height:16, background:C.border, display:"inline-block" }}/>
             <span style={{ fontSize:11, color:C.dim }}>Caso de Estudio Técnico</span>
           </div>
           <div style={{ display:"flex", alignItems:"center", gap:10 }}>
             <span style={{ fontSize:9, fontWeight:700, fontFamily:C.mono, letterSpacing:".1em", color:C.muted, padding:"2px 8px", border:`1px solid ${C.border}`, borderRadius:3 }}>CONFIDENCIAL</span>
-            <Logo name="pampa.png" w={72} h={24}/>
+            <Logo name="pampa.png" w={72} h={24} light/>
           </div>
         </div>
       </header>
@@ -201,7 +206,7 @@ function App() {
         <F>
           <div style={{ background:C.surface, border:`1px solid ${C.border}`, borderRadius:8, padding:24, marginBottom:28 }}>
             <div style={{ display:"flex", alignItems:"flex-start", gap:20, marginBottom:16 }}>
-              <Logo name="petrobras.png" w={120} h={48}/>
+              <Logo name="petrobras.png" w={120} h={48} light/>
               <div>
                 <h3 style={{ fontSize:16, fontWeight:700, color:C.white, margin:"0 0 10px" }}>Origen: Dataset 3W — Petrobras</h3>
                 <p style={{ fontSize:13, color:C.text, lineHeight:1.7, margin:0 }}>
@@ -597,9 +602,9 @@ function App() {
           <div style={{ borderTop:`1px solid ${C.border}`, paddingTop:20, marginBottom:20 }}>
             <div style={{ fontSize:9, fontWeight:700, fontFamily:C.mono, color:C.faint, letterSpacing:".12em", marginBottom:14 }}>RESPALDO Y ECOSISTEMA</div>
             <div style={{ display:"flex", justifyContent:"center", gap:16 }}>
-              <Logo name="bgv.png" w={90} h={28}/>
-              <Logo name="ignite.png" w={90} h={28}/>
-              <Logo name="nvidia.png" w={120} h={28}/>
+              <Logo name="bgv.png" w={90} h={28} light/>
+              <Logo name="ignite.png" w={90} h={28} light/>
+              <Logo name="nvidia.png" w={120} h={28} light/>
             </div>
           </div>
           <div style={{ fontSize:10, color:C.faint }}>Confidencial — para uso exclusivo de inversores y clientes</div>
